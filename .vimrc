@@ -1,33 +1,64 @@
 call plug#begin('~/.vim/plugged')
+""""""intelisense
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'prabirshrestha/async.vim'
+
+""""""autocomplete
+" Plug 'vim-scripts/AutoComplPop'
 " Plug 'digitaltoad/vim-jade'
 " Plug 'cakebaker/scss-syntax.vim'
 " Plug 'lervag/vimtex'
 " Plug 'neoclide/coc.nvim'
 " Plug 'Shougo/ddc.vim'
 " Plug 'vim-denops/denops.vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-Plug 'tomasiser/vim-code-dark'
+
+"""""lint 
+Plug 'heavenshell/vim-textlint'
+
+"""""code-style
+Plug 'rhysd/vim-clang-format'
+
+"""""training 
 Plug 'takac/vim-hardtime'
+
+"""""themes 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'gkeep/iceberg-dark'
-Plug 'aperezdc/vim-template'
 Plug 'enricobacis/vim-airline-clock'     
-Plug 'sirver/ultisnips'
-Plug 'vim-scripts/AutoComplPop'
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-Plug 'juro106/ftjpn'
-Plug 'mdlerch/vim-gnuplot'
-" Plug 'suan/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
-Plug 'heavenshell/vim-textlint'
-Plug 'aklt/plantuml-syntax'
+Plug 'cocopon/pgmnt.vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'dracula/vim'
+Plug 'bignimbus/pop-punk.vim'
+Plug 'KabbAmine/yowish.vim'
+Plug 'haishanh/night-owl.vim'
+Plug 'tomasiser/vim-code-dark'
+Plug 'morhetz/gruvbox'
+
+"""""util 
+Plug 'preservim/nerdtree'
+" Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'aperezdc/vim-template'
+" Plug 'sirver/ultisnips'
+" Plug 'juro106/ftjpn'
+Plug 'preservim/nerdtree'
+
+"""""syntax-highlight
+" Plug 'mdlerch/vim-gnuplot'
+" Plug 'aklt/plantuml-syntax'
+
 call plug#end()
 
 let $LANG='en_US.UTF-8'
 
-colorscheme codedark
+" colorscheme iceberg
+" colorscheme dracula
+" colorscheme pop-punk
+" colorscheme yowish
+colorscheme night-owl
+" colorscheme codedark
+" colorscheme gruvbox
+set background=dark
 
 " filetype plugin on
 " Uncomment to override defaults:
@@ -58,13 +89,6 @@ colorscheme codedark
 let g:airline_left_sep = '⮀'
 let g:airline_left_alt_sep = '⮁'
 
-" テーマの変更
-" let g:airline_theme = 'papercolor' 
-
-" Plug iceberg-darkで入れたテーマ
-let g:airline_theme = 'icebergDark'
-let g:airline#extensions#whitespace#enabled = 0
-
 " tabを表示する
 let g:airline#extensions#tabline#enabled = 1
 " clockを表示する
@@ -77,7 +101,6 @@ let g:airline#extensions#clock#updatetime = 1
 autocmd FileType c setlocal commentstring =//\ %s
 autocmd FileType cpp setlocal commentstring =//\ %s
 autocmd FileType c++ setlocal commentstring =//\ %s
-
 
 """"""""""""""""""""""""""""""
 " 各種オプションの設定
@@ -122,14 +145,18 @@ set foldmethod=indent
 
 " 画面に余裕を持たせてスクロール
 set scrolloff=5
+
 " bufferを保存せず次にいける
 set hidden
+
+" ファイルを閉じてもundoを有効にする
+set undofile
 
 " カーソル位置のハイライト
 " set cursorline
 
-" カーソルの相対行
-" set relativenumber
+" clipboardを使用する
+set clipboard=unnamed
 
 filetype plugin on
 
