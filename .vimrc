@@ -1,9 +1,9 @@
 call plug#begin('~/.vim/plugged')
-""""""intelisense
+""""""intelligence
 " Plug 'prabirshrestha/vim-lsp'
 " Plug 'prabirshrestha/async.vim'
 
-""""""autocomplete
+""""""auto complete
 " Plug 'vim-scripts/AutoComplPop'
 " Plug 'digitaltoad/vim-jade'
 " Plug 'cakebaker/scss-syntax.vim'
@@ -35,76 +35,42 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'morhetz/gruvbox'
 
 """""util 
-Plug 'preservim/nerdtree'
+" Plug 'preservim/nerdtree'
 " Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'aperezdc/vim-template'
 " Plug 'sirver/ultisnips'
 " Plug 'juro106/ftjpn'
-Plug 'preservim/nerdtree'
+Plug 'tpope/vim-fugitive'
+Plug 'thinca/vim-quickrun'
+Plug 'nvie/vim-flake8'
 
 """""syntax-highlight
 " Plug 'mdlerch/vim-gnuplot'
 " Plug 'aklt/plantuml-syntax'
+Plug 'tpope/vim-markdown'
 
 call plug#end()
 
+
+""""""""""""""""""""""""""""""
+" 各種オプションの設定
+""""""""""""""""""""""""""""""
+"　言語の設定
 let $LANG='en_US.UTF-8'
 
+"カラースキーマ(テーマ)を変更する
 " colorscheme iceberg
 " colorscheme dracula
-" colorscheme pop-punk
+colorscheme pop-punk
 " colorscheme yowish
-colorscheme night-owl
+" colorscheme night-owl
 " colorscheme codedark
 " colorscheme gruvbox
+
+" backgroundを変更する
 set background=dark
 
-" filetype plugin on
-" Uncomment to override defaults:
-" let g:instant_markdown_slow = 1
-" let g:instant_markdown_autostart = 1
-" let g:instant_markdown_open_to_the_world = 1
-" let g:instant_markdown_allow_unsafe_content = 1
-" let g:instant_markdown_allow_external_content = 1
-" let g:instant_markdown_mathjax = 1
-" let g:instant_markdown_mermaid = 1
-" let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
-" let g:instant_markdown_autoscroll = 1
-" let g:instant_markdown_port = 8888
-" let g:instant_markdown_python = 1
-
-" textlint.vim {{{
-" let g:textlint_configs = 
-"   \ '@azu/textlint-config-readme',
-"   \ '@example/textlint-config-example',
-"   \ ]
-" }}}
-
-
-""""""""""""""""""""""""""""""
-" powerlineの設定
-"""""""""""""""""""""""""""""""
-"左側に使用されるセパレータ
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-
-" tabを表示する
-let g:airline#extensions#tabline#enabled = 1
-" clockを表示する
-let g:airline#extensions#clock#format = '%H:%M:%S'
-let g:airline#extensions#clock#updatetime = 1
-
-""""""""""""""""""""""""""""""
-" 各種オプションの設定
-""""""""""""""""""""""""""""""
-autocmd FileType c setlocal commentstring =//\ %s
-autocmd FileType cpp setlocal commentstring =//\ %s
-autocmd FileType c++ setlocal commentstring =//\ %s
-
-""""""""""""""""""""""""""""""
-" 各種オプションの設定
-""""""""""""""""""""""""""""""
 " 行番号を表示する
 set number
 
@@ -152,6 +118,10 @@ set hidden
 " ファイルを閉じてもundoを有効にする
 set undofile
 
+" スペルチェッカをつける
+set spell
+set spelllang=en_us
+
 " カーソル位置のハイライト
 " set cursorline
 
@@ -166,6 +136,85 @@ noremap <Down> <Nop>
 noremap <Left> <Nop>
 noremap <Right> <Nop>
 
+
+
+""""""""""""""""""""""""""""""
+" markdownの設定
+"""""""""""""""""""""""""""""""
+" file type plugin on
+" Uncomment to override defaults:
+" let g:instant_markdown_slow = 1
+" let g:instant_markdown_autostart = 1
+" let g:instant_markdown_open_to_the_world = 1
+" let g:instant_markdown_allow_unsafe_content = 1
+" let g:instant_markdown_allow_external_content = 1
+" let g:instant_markdown_mathjax = 1
+" let g:instant_markdown_mermaid = 1
+" let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
+" let g:instant_markdown_autoscroll = 1
+" let g:instant_markdown_port = 8888
+" let g:instant_markdown_python = 1
+
+""""""""""""""""""""""""""""""
+" textlintの設定
+"""""""""""""""""""""""""""""""
+" textlint.vim {{{
+" let g:textlint_configs = 
+"   \ '@azu/textlint-config-readme',
+"   \ '@example/textlint-config-example',
+"   \ ]
+" }}}
+
+""""""""""""""""""""""""""""""
+" quickrunの設定
+"""""""""""""""""""""""""""""""
+let g:quickrun_config = get(g:, 'quickrun_config', {})
+let g:quickrun_config._ = {
+      \ 'outputter' : 'quickfix',
+      \ 'outputter/quickfix/into': 1,
+      \ }
+
+
+" let g:quickrun_config._ = {
+"       \ 'outputter/buffer/opener': 'bel 10sp',
+"       \ 'outputter/buffer/into': 1,
+"       \ 'outputter/buffer/close_on_empty': 1,
+"       \ 'outputter/quickfix/errorformat': \"&errorformat",
+"       \ 'outputter/quickfix/open_cmd': \"copen",
+"       \ 'outputter/quickfix/into': 1,
+"       \ }
+
+
+""""""""""""""""""""""""""""""
+" vim-flake8の設定
+"""""""""""""""""""""""""""""""
+autocmd BufWritePost *.py call flake8#Flake8()
+
+
+
+""""""""""""""""""""""""""""""
+" powerlineの設定
+"""""""""""""""""""""""""""""""
+"左側に使用されるセパレータ
+let g:airline_left_sep = '⮀'
+let g:airline_left_alt_sep = '⮁'
+
+" tabを表示する
+let g:airline#extensions#tabline#enabled = 1
+" clockを表示する
+let g:airline#extensions#clock#format = '%H:%M:%S'
+let g:airline#extensions#clock#updatetime = 1
+
+""""""""""""""""""""""""""""""
+" ファイルに対するcommnetの設定
+""""""""""""""""""""""""""""""
+autocmd FileType c setlocal commentstring =//\ %s
+autocmd FileType cpp setlocal commentstring =//\ %s
+autocmd FileType c++ setlocal commentstring =//\ %s
+
+""""""""""""""""""""""""""""""
+"hardtimeの設定
+""""""""""""""""""""""""""""""
 let g:hardtime_default_on = 1
 let g:list_of_normal_keys = ["h", "l", "-", "+", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 let g:list_of_visual_keys = ["h", "l", "-", "+", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
