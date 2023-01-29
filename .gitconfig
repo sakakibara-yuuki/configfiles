@@ -1,0 +1,16 @@
+[user]
+	name = sakakibara
+	; email = y.sakakibara.223@ms.saitama-u.ac.jp
+	email = sakakilabo0000@gmail.com
+[core]
+	; editor = code --wait
+    editor = vim
+[color]
+	ui = auto
+[init]
+	defaultBranch = main
+[alias]
+	st = status
+	sw = switch
+	br = branch
+	ci = commit
