@@ -13,10 +13,14 @@ call plug#begin('~/.vim/plugged')
 " Plug 'vim-denops/denops.vim'
 
 """""lint 
+Plug 'dense-analysis/ale'
 Plug 'heavenshell/vim-textlint'
+Plug 'nvie/vim-flake8'
+Plug 'eslint/eslint'
+Plug 'psf/black', { 'branch': 'stable' }
 
 """""code-style
-Plug 'rhysd/vim-clang-format'
+" Plug 'rhysd/vim-clang-format'
 
 """""training 
 Plug 'takac/vim-hardtime'
@@ -33,22 +37,30 @@ Plug 'KabbAmine/yowish.vim'
 Plug 'haishanh/night-owl.vim'
 Plug 'tomasiser/vim-code-dark'
 Plug 'morhetz/gruvbox'
+Plug 'ryanoasis/vim-devicons'
 
 """""util 
-" Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree'
 " Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'aperezdc/vim-template'
 " Plug 'sirver/ultisnips'
 " Plug 'juro106/ftjpn'
 Plug 'tpope/vim-fugitive'
+Plug 'rbong/vim-flog'
 Plug 'thinca/vim-quickrun'
-Plug 'nvie/vim-flake8'
+Plug 'vim-test/vim-test'
+Plug 'hdiniz/vim-gradle'
+" Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'dhruvasagar/vim-table-mode'
+" Plug 'airblade/vim-gitgutter'
+Plug 'vim-scripts/dbext.vim'
 
 """""syntax-highlight
 " Plug 'mdlerch/vim-gnuplot'
 " Plug 'aklt/plantuml-syntax'
-Plug 'tpope/vim-markdown'
+" Plug 'tpope/vim-markdown'
+Plug 'pangloss/vim-javascript'
 
 call plug#end()
 
@@ -113,13 +125,12 @@ set foldmethod=indent
 set scrolloff=5
 
 " bufferを保存せず次にいける
-set hidden
+" set hidden
 
 " ファイルを閉じてもundoを有効にする
 set undofile
 
 " スペルチェッカをつける
-set spell
 set spelllang=en_us
 
 " カーソル位置のハイライト
@@ -137,6 +148,28 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 
 
+""""""""""""""""""""""""""""""
+" blackの設定
+"""""""""""""""""""""""""""""""
+" augroup black_on_save
+"   autocmd!
+"   autocmd BufWritePre *.py Black
+" augroup end
+
+""""""""""""""""""""""""""""""
+" mypyの設定
+"""""""""""""""""""""""""""""""
+let g:ale_linters = {
+    \'python': ['flake8', 'mypy'],
+    \'javascript': ['eslint'],
+    \'java': ['checkstyle'],
+    \}
+let g:ale_java_checkstyle_config = '~/.vim/plugged/ale/config/checkstyle.xml'
+""""""""""""""""""""""""""""""
+" clang-formatの設定
+"""""""""""""""""""""""""""""""
+let g:clang_format#code_style = "llvm"
+let g:clang_format#auto_format = 1
 
 """"""""""""""""""""""""""""""
 " markdownの設定
@@ -174,23 +207,53 @@ let g:quickrun_config._ = {
       \ 'outputter/quickfix/into': 1,
       \ }
 
+let g:quickrun_config.cpp = {
+      \ 'command' : 'clang++',
+      \ 'cmdopt'  : '-std=c++11',
+      \ 'outputter' : 'quickfix',
+      \ 'outputter/quickfix/into': 1,
+      \ }
 
-" let g:quickrun_config._ = {
-"       \ 'outputter/buffer/opener': 'bel 10sp',
-"       \ 'outputter/buffer/into': 1,
-"       \ 'outputter/buffer/close_on_empty': 1,
-"       \ 'outputter/quickfix/errorformat': \"&errorformat",
-"       \ 'outputter/quickfix/open_cmd': \"copen",
-"       \ 'outputter/quickfix/into': 1,
+let g:quickrun_config.js = {
+      \ 'exec' : 'babel %o %s | node',
+      \ 'cmdopt'  : '--stage 1',
+      \ 'outputter' : 'quickfix',
+      \ 'outputter/quickfix/into': 1,
+      \ }
+
+" let g:quickrun_config.java = {
+"       \   'exec': ['javac -cp %s:p:h:h:h */*.java', 'java -cp %s:p:h:h:h:%s:p:h %s:t:r %a' ],
+"       \   'hook/output_encode/encoding': '&termencoding',
+"       \   'hook/sweep/files': '%S:p:r.class',
 "       \ }
 
+" let g:quickrun_config.java = {
+"         \   'exec' : ['javac *.java', '%c %s:t:r']
+"         \}
+" if %s:t:r in "test 
+" 'exec' : [%c org.junit.platform.console.ConsoleLancher %s:t:r -p %s:h]
+
+" test用
+" let g:quickrun_config.java = {
+"         \   'exec' : ['javac money/*.java', '%c org.junit.platform.console.ConsoleLauncher -p money']
+"         \}
 
 """"""""""""""""""""""""""""""
 " vim-flake8の設定
 """""""""""""""""""""""""""""""
 autocmd BufWritePost *.py call flake8#Flake8()
 
+""""""""""""""""""""""""""""""
+" vim-testの設定
+"""""""""""""""""""""""""""""""
+" make test commands execute using dispatch.vim
+let test#strategy = "vimterminal"
+let test#vim#term_position = "belowright"
+let test#python#runner = 'pytest'
+let test#javascript#runner = 'jest'
+" let test#java#runner = 'gradletest'
 
+" let test#java#runner = 'maventest'
 
 """"""""""""""""""""""""""""""
 " powerlineの設定
@@ -238,21 +301,36 @@ let g:list_of_disabled_keys = []
 " autocmd FileType typescript setlocal omnifunc=lsp#complete
 
 "LSP install
-if (executable('clangd'))
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd']},
-        \ 'allowlist': ['cpp']
-        \ })
-endif
-let g:lsp_diagnostics_enabled = 0
-function! s:on_lsp_buffer_enabled() abort
-    setlocal omnifunc=lsp#complete
-    nmap <buffer> gd <plug>(lsp-definition)
-    nmap <buffer> <f2> <plug>(lsp-rename)
-endfunction
-augroup lsp_install
-    au!
-    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
+" if (executable('clangd'))
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'clangd',
+"         \ 'cmd': {server_info->['clangd']},
+"         \ 'allowlist': ['cpp']
+"         \ })
+" endif
+" let g:lsp_diagnostics_enabled = 0
+" function! s:on_lsp_buffer_enabled() abort
+"     setlocal omnifunc=lsp#complete
+"     nmap <buffer> gd <plug>(lsp-definition)
+"     nmap <buffer> <f2> <plug>(lsp-rename)
+" endfunction
+" augroup lsp_install
+"     au!
+"     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+" augroup END
+"
+"
 
+let g:alpha_lower = 'abcdefghijklmnopqrstuvwxyz'
+let g:alpha_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+let g:digits = '0123456789'
+let g:alpha_all = g:alpha_lower .. g:alpha_upper
+let g:alnum = g:alpha_all .. g:digits
+
+function! s:clear_regs() abort
+  for r in split(g:alnum .. '/', '\zs')
+    call setreg(r, [])
+  endfor
+endfunction
+command! ClearRegs call s:clear_regs()
+" autocmd VimEnter * ++once ClearRegs
